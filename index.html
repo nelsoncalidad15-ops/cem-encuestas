@@ -1,0 +1,239 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Autosol | Encuesta CEM</title>
+  <style>
+    :root{
+      --bg:#0b1220; --text:#eaf0ff; --muted:#a9b7d6; --border:rgba(255,255,255,.10);
+      --shadow:0 18px 40px rgba(0,0,0,.35); --r:18px; --r2:14px;
+      font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial
+    }
+    body{margin:0;background:radial-gradient(1200px 700px at 20% 10%, rgba(47,125,255,.22), transparent 60%),var(--bg);
+      color:var(--text);min-height:100vh}
+    .wrap{max-width:900px;margin:0 auto;padding:28px 18px 90px}
+    header{display:flex;gap:14px;align-items:center;margin-bottom:18px}
+    .logo{width:44px;height:44px;border-radius:12px;background:linear-gradient(135deg,rgba(47,125,255,.95),rgba(47,125,255,.35));
+      box-shadow:var(--shadow);display:grid;place-items:center;font-weight:800}
+    .title h1{font-size:18px;margin:0}
+    .title p{margin:4px 0 0;color:var(--muted);font-size:13px}
+    .card{border:1px solid var(--border);border-radius:var(--r);box-shadow:var(--shadow);overflow:hidden;
+      background:linear-gradient(180deg,rgba(255,255,255,.06),rgba(255,255,255,.03))}
+    .body{padding:18px}
+    .grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+    @media(max-width:760px){.grid{grid-template-columns:1fr}}
+    label{display:block;font-size:12px;color:var(--muted);margin:0 0 6px}
+    input,select,textarea{width:100%;box-sizing:border-box;border-radius:12px;padding:11px 12px;border:1px solid var(--border);
+      background:rgba(10,18,35,.55);color:var(--text);outline:none}
+    textarea{min-height:90px;resize:vertical}
+    .section{margin:16px 0 10px;font-size:14px}
+    .q{background:rgba(10,18,35,.45);border:1px solid var(--border);border-radius:var(--r2);padding:14px;margin:10px 0}
+    .q h3{margin:0 0 10px;font-size:14px;line-height:1.35;font-weight:650}
+    .scale{display:grid;grid-template-columns:repeat(11,1fr);gap:6px}
+    .btnNum{border-radius:12px;border:1px solid var(--border);background:rgba(255,255,255,.04);padding:10px 0;cursor:pointer;
+      font-weight:650;text-align:center;user-select:none}
+    .btnNum.active{border-color:rgba(47,125,255,.9);background:rgba(47,125,255,.18);box-shadow:0 0 0 3px rgba(47,125,255,.12) inset}
+    .hint{display:flex;justify-content:space-between;font-size:12px;color:var(--muted);margin-top:8px}
+    .actions{display:flex;gap:10px;justify-content:flex-end;padding:14px 18px;border-top:1px solid var(--border);background:rgba(0,0,0,.12)}
+    .btn{border:1px solid var(--border);background:rgba(255,255,255,.06);color:var(--text);padding:10px 14px;border-radius:14px;cursor:pointer;font-weight:650}
+    .btn.primary{background:rgba(47,125,255,.22);border-color:rgba(47,125,255,.65)}
+    .toast{margin-top:12px;font-size:13px;color:var(--muted)}
+
+    .chatFab{position:fixed;right:18px;bottom:18px;width:56px;height:56px;border-radius:18px;background:linear-gradient(135deg,rgba(47,125,255,.95),rgba(47,125,255,.35));
+      border:1px solid rgba(255,255,255,.20);box-shadow:var(--shadow);display:grid;place-items:center;cursor:pointer;z-index:50}
+    .chatWin{position:fixed;right:18px;bottom:86px;width:min(360px,calc(100vw - 36px));border-radius:18px;overflow:hidden;border:1px solid var(--border);
+      box-shadow:var(--shadow);background:rgba(10,18,35,.92);display:none;z-index:51}
+    .chatHeader{padding:12px 14px;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid var(--border);background:rgba(0,0,0,.18)}
+    .chatBody{padding:12px;max-height:340px;overflow:auto;display:flex;flex-direction:column;gap:10px}
+    .bubble{padding:10px 12px;border-radius:14px;border:1px solid var(--border);background:rgba(255,255,255,.04);font-size:13px;line-height:1.35}
+    .bubble.me{align-self:flex-end;background:rgba(47,125,255,.15);border-color:rgba(47,125,255,.35)}
+    .quick{display:flex;flex-wrap:wrap;gap:8px}
+    .chip{border:1px solid var(--border);background:rgba(255,255,255,.04);color:var(--text);padding:8px 10px;border-radius:999px;cursor:pointer;font-size:12px;font-weight:650}
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <header>
+      <div class="logo">A</div>
+      <div class="title">
+        <h1>Autosol | Encuesta CEM</h1>
+        <p>Tu opinión nos ayuda a mejorar el servicio.</p>
+      </div>
+    </header>
+
+    <div class="card">
+      <div class="body">
+        <div class="grid">
+          <div><label>Nombre (opcional)</label><input id="nombre" /></div>
+          <div><label>Teléfono (opcional)</label><input id="telefono" /></div>
+          <div><label>Chasis o VIN (opcional)</label><input id="vin" placeholder="Ej: 9BW..." /></div>
+          <div><label>Sucursal (opcional)</label>
+            <select id="sucursal"><option value="">Seleccionar</option><option>Jujuy</option><option>Salta</option><option>Tartagal</option></select>
+          </div>
+          <div><label>Asesor (opcional)</label><input id="asesor" /></div>
+        </div>
+
+        <div class="section">Preguntas</div>
+        <div id="questions"></div>
+
+        <div class="section">Comentario (opcional)</div>
+        <textarea id="comentario"></textarea>
+
+        <div class="toast" id="toast"></div>
+      </div>
+
+      <div class="actions">
+        <button class="btn" id="btnReload" type="button">Recargar</button>
+        <button class="btn primary" id="btnSend" type="button">Enviar encuesta</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="chatFab" id="chatFab">💬</div>
+  <div class="chatWin" id="chatWin">
+    <div class="chatHeader">
+      <strong>Ayuda Autosol</strong>
+      <button id="chatClose" style="border:none;background:transparent;color:#a9b7d6;cursor:pointer;font-size:16px">✕</button>
+    </div>
+    <div class="chatBody" id="chatBody">
+      <div class="bubble">Hola 👋 Elegí una opción:</div>
+      <div class="quick" id="quick"></div>
+    </div>
+  </div>
+
+<script>
+  // ✅ TU PROXY (ya funcionando)
+  const PROXY_URL = "https://cem-encuestas.nelson-calidad15.workers.dev";
+  const API_TOKEN = "autosol12345678";
+  const ENCUESTA  = "Encuesta CEM";
+
+  let QUESTIONS = [];
+  const ANSWERS = {};
+  const $ = (id) => document.getElementById(id);
+  const toast = (m)=> $("toast").textContent = m || "";
+  const esc = (s)=> String(s).replace(/[&<>"']/g, m => ({ "&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#039;" }[m]));
+
+  async function loadQuestions(){
+    toast("Cargando preguntas...");
+    $("questions").innerHTML = "";
+    Object.keys(ANSWERS).forEach(k => delete ANSWERS[k]);
+
+    const url = `${PROXY_URL}?json=1&token=${encodeURIComponent(API_TOKEN)}&encuesta=${encodeURIComponent(ENCUESTA)}`;
+    const res = await fetch(url);
+    const data = await res.json();
+
+    if(!data.ok){ toast("Error: " + (data.error || "No se pudo cargar")); return; }
+    QUESTIONS = data.preguntas || [];
+    renderQuestions();
+    toast("");
+  }
+
+  function renderQuestions(){
+    const wrap = $("questions");
+    wrap.innerHTML = "";
+    QUESTIONS.forEach(q=>{
+      const div = document.createElement("div");
+      div.className="q";
+      div.innerHTML = `
+        <h3>${esc(q.pregunta)}</h3>
+        <div class="scale">
+          ${Array.from({length:11},(_,i)=>`<div class="btnNum" data-qid="${esc(q.id)}" data-val="${i}">${i}</div>`).join("")}
+        </div>
+        <div class="hint"><span>Nada satisfecho</span><span>Muy satisfecho</span></div>
+      `;
+      wrap.appendChild(div);
+    });
+
+    wrap.querySelectorAll(".btnNum").forEach(btn=>{
+      btn.onclick = ()=>{
+        const qid = btn.dataset.qid;
+        const val = Number(btn.dataset.val);
+        const group = btn.parentElement;
+        group.querySelectorAll(".btnNum").forEach(b=>b.classList.remove("active"));
+        btn.classList.add("active");
+        ANSWERS[qid]=val;
+      };
+    });
+  }
+
+  function validate(){
+    for(const q of QUESTIONS){
+      if(!(q.id in ANSWERS)) return `Falta responder: "${q.pregunta}"`;
+    }
+    return null;
+  }
+
+  async function send(){
+    const err = validate();
+    if(err){ toast(err); return; }
+
+    $("btnSend").disabled = true;
+    toast("Enviando...");
+
+    const payload = {
+      token: API_TOKEN,
+      encuesta: ENCUESTA,
+      meta: {
+        nombre: $("nombre").value.trim(),
+        telefono: $("telefono").value.trim(),
+        vin: $("vin").value.trim(),
+        asesor: $("asesor").value.trim(),
+        sucursal: $("sucursal").value,
+        comentario: $("comentario").value.trim()
+      },
+      respuestas: QUESTIONS.map(q=>({
+        id_pregunta: q.id,
+        pregunta: q.pregunta,
+        respuesta: ANSWERS[q.id]
+      })),
+      user_agent: navigator.userAgent
+    };
+
+    try{
+      const res = await fetch(PROXY_URL, {
+        method:"POST",
+        headers:{ "Content-Type":"application/json" },
+        body: JSON.stringify(payload)
+      });
+      const data = await res.json();
+      if(!data.ok){ toast("Error: " + (data.error || "No se pudo guardar")); return; }
+      toast("¡Gracias! Encuesta registrada.");
+    } catch(e){
+      toast("Error de red: " + e);
+    } finally {
+      $("btnSend").disabled = false;
+    }
+  }
+
+  const FAQ = [
+    { q:"¿Para qué es esta encuesta?", a:"Es una encuesta CEM para mejorar la experiencia de compra en Autosol." },
+    { q:"¿Cuánto tarda?", a:"Menos de 1 minuto. Escala 0 a 10." },
+    { q:"¿Mis datos son obligatorios?", a:"No, son opcionales." }
+  ];
+  function addBubble(t, me){
+    const d=document.createElement("div");
+    d.className="bubble"+(me?" me":"");
+    d.textContent=t;
+    $("chatBody").appendChild(d);
+    $("chatBody").scrollTop=$("chatBody").scrollHeight;
+  }
+  function initChat(){
+    const quick=$("quick");
+    FAQ.forEach(item=>{
+      const b=document.createElement("button");
+      b.className="chip"; b.type="button"; b.textContent=item.q;
+      b.onclick=()=>{ addBubble(item.q,true); addBubble(item.a,false); };
+      quick.appendChild(b);
+    });
+    $("chatFab").onclick=()=>{ $("chatWin").style.display = ($("chatWin").style.display==="block"?"none":"block"); };
+    $("chatClose").onclick=()=>{ $("chatWin").style.display="none"; };
+  }
+
+  $("btnSend").onclick = send;
+  $("btnReload").onclick = loadQuestions;
+  initChat();
+  loadQuestions();
+</script>
+</body>
+</html>
